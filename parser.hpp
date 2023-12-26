@@ -2,7 +2,8 @@
 # define PARSER_HPP
 
 # include "Term.hpp"
+# include <vector>
 
-std::vector<Term *> parse(char *equation);
+std::vector<Term> parse(char *equation);
 
 #endif

@@ -1,45 +1,67 @@
 #include <iostream>
 #include <vector>
 #include "Term.hpp"
+#include "utils.hpp"
 #include <math.h>
 
-std::vector<Term* >	compute_reduced_form(std::vector<Term *> &terms) {
-	std::vector<Term *>::iterator	it;
-	std::vector<Term *>::iterator	tmp;
+std::vector<Term>	compute_reduced_form(std::vector<Term> &terms) {
+	std::vector<Term>::iterator	it;
+	std::vector<Term>::iterator	tmp;
 
+	print_vector(terms);	
 	for(it = terms.begin(); it != terms.end(); it++)
 	{
 		tmp = it + 1;
-		while(tmp != terms.end() && (*tmp)->isRhs != true)
-			tmp++;
-		if(tmp != terms.end() && (*tmp)->exponent == (*it)->exponent) {
-			(*it)->coefficient += ((*tmp)->coefficient *= - 1);
-			delete *tmp;
-			terms.erase(tmp);
-		}
-		else {
-			(*tmp)->coefficient *= -1;
-			(*tmp)->isRhs = false;
+		while(tmp != terms.end())
+		{
+			while(tmp != terms.end() && (*tmp).isRhs != true)
+				tmp++;
+			if(tmp != terms.end() && (*tmp).exponent == (*it).exponent) {
+				(*it).coefficient += ((*tmp).coefficient *= -1);
+				terms.erase(tmp);
+			}
+			else
+				tmp++;
 		}
 	}
-	std::cout << "Reduced form: ";
-	for(it = terms.begin(); it != terms.end(); it++) {
-		std::cout << (*it)->coefficient << " X^" << (*it)->exponent;
-		if((it + 1) != terms.end())
-			std::cout << " ";
+	for(it = terms.begin(); it != terms.end(); it++)
+	{
+		if((*it).isRhs == true)
+		{
+			(*it).coefficient *= -1;
+			(*it).isRhs = false;
+		}
 	}
-	std::cout << " = 0\n";
 	return (terms);
 }
+
+void	print_reduced_form(std::vector<Term> &terms)
+{
+	std::vector<Term>::iterator it;
+
+	std::cout << "Reduced form: ";
+	for(it = terms.begin(); it != terms.end(); it++)
+	{
+		if(it != terms.begin() && (*it).coefficient >= 0)
+			std::cout << " + " << (*it).coefficient << " * X^" << (*it).exponent;
+		if(it == terms.begin() && (*it).coefficient >= 0)
+			std::cout << (*it).coefficient << " * X^" << (*it).exponent;
+		if(it == terms.begin() && (*it).coefficient < 0)
+			std::cout << "- " << ((*it).coefficient * -1) << " * X^" << (*it).exponent;
+		if(it != terms.begin() && (*it).coefficient < 0)
+			std::cout << " - " << ((*it).coefficient * -1) << " * X^" << (*it).exponent;
+	}
+	std::cout << " = 0\n";
+}
 		 
-void	determinate_degree(std::vector<Term *> &terms) {
-	std::vector<Term *>::iterator	it;
+void	determinate_degree(std::vector<Term> &terms) {
+	std::vector<Term>::iterator	it;
 	int degree = 0;
 
 	for(it = terms.begin(); it != terms.end(); it++)
 	{
-		if ((*it)->exponent > degree)
-			degree = (*it)->exponent;
+		if ((*it).exponent > degree)
+			degree = (*it).exponent;
 	}
 	if(degree > 2) {
 		std::cout << "The polynomial degree is strictly greater than 2, I can't solve\n";
@@ -49,23 +71,23 @@ void	determinate_degree(std::vector<Term *> &terms) {
 		std::cout << "Polynomial degree: " << degree << std::endl;
 }
 
-void	compute_discriminant(std::vector<Term *> &terms) {
+void	compute_discriminant(std::vector<Term> &terms) {
 	float a = 0, b = 0, c = 0;
 	float discriminant;
 
-	std::vector<Term *>::iterator	it;
+	std::vector<Term>::iterator	it;
 	for(it = terms.begin(); it != terms.end(); it++)
 	{
-		switch ((*it)->exponent) { 
+		switch ((*it).exponent) { 
 
 		case 0:
-			c = (*it)->coefficient;
+			c = (*it).coefficient;
 			break;
 		case 1:
-			b = (*it)->coefficient;
+			b = (*it).coefficient;
 			break;
 		case 2:
-			a = (*it)->coefficient;
+			a = (*it).coefficient;
 			break;
 		}
 	}

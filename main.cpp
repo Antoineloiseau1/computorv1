@@ -9,8 +9,9 @@ int main(int argc, char *argv[])
 		std::cerr << "usage: computer <polynomial_equation>\n";
 		exit(1);
 	}
-	std::vector<Term *> terms = parse(argv[1]);
+	std::vector<Term> terms = parse(argv[1]);
 	terms = compute_reduced_form(terms);
+	print_reduced_form(terms);
 	determinate_degree(terms);
 	compute_discriminant(terms);
 	return 0;

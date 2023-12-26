@@ -7,7 +7,7 @@
 bool	is_sign(char c);
 
 template <typename T>
-void	print_vector(std::vector<T> v) {
+void	print_vector(std::vector<T> &v) {
 	typename std::vector<T>::iterator	it;
 
 	std::cout << "{";
